@@ -43,10 +43,4 @@ Through these projects, I am continuously improving my skills in:
 * Statistical thinking 🧠
 * Writing clean and reproducible analysis code ✨
 
-## 🤝 Let’s Connect
 
-If you’re interested in my work, feel free to explore the projects, give feedback, or connect with me. I’m always open to learning opportunities and collaboration! 🌍
-
----
-
-⭐ *Thank you for visiting my portfolio!*
