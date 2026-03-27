@@ -20,17 +20,8 @@ INSERT layoffs_staging
 SELECT * FROM world_layoffs.layoffs;
 
 
--- now when we are data cleaning we usually follow a few steps
--- 1. check for duplicates and remove any
--- 2. standardize data and fix errors
--- 3. Look at null values and see what 
--- 4. remove any columns and rows that are not necessary - few ways
 
-
-
--- 1. Remove Duplicates
-
-# First let's check for duplicates
+-- 1. Remove Duplicat
 
 
 
@@ -78,9 +69,6 @@ FROM (
 WHERE 
 	row_num > 1;
 
--- these are the ones we want to delete where the row number is > 1 or 2or greater essentially
-
--- now you may want to write it like this:
 WITH DELETE_CTE AS 
 (
 SELECT *
@@ -169,7 +157,6 @@ WHERE row_num >= 2;
 -- 2. Standardize Data
 
 
--- I also noticed the Crypto has multiple different variations. We need to standardize that - let's say all to Crypto
 SELECT DISTINCT industry
 FROM world_layoffs.layoffs_staging2
 ORDER BY industry;
@@ -182,9 +169,6 @@ WHERE industry IN ('Crypto Currency', 'CryptoCurrency');
 SELECT DISTINCT industry
 FROM world_layoffs.layoffs_staging2
 ORDER BY industry;
-
--- --------------------------------------------------
--- we also need to look at 
 
 SELECT *
 FROM world_layoffs.layoffs_staging2;
@@ -203,15 +187,15 @@ FROM world_layoffs.layoffs_staging2
 ORDER BY country;
 
 
--- Let's also fix the date columns:
+
 SELECT *
 FROM world_layoffs.layoffs_staging2;
 
--- we can use str to date to update this field
+
 UPDATE layoffs_staging2
 SET `date` = STR_TO_DATE(`date`, '%m/%d/%Y');
 
--- now we can convert the data type properly
+
 ALTER TABLE layoffs_staging2
 MODIFY COLUMN `date` DATE;
 
@@ -220,8 +204,6 @@ SELECT *
 FROM world_layoffs.layoffs_staging2;
 
 
-
--- if we look at industry it looks like we have some null and empty rows, let's take a look at these
 SELECT DISTINCT industry
 FROM world_layoffs.layoffs_staging2
 ORDER BY industry;
@@ -232,7 +214,6 @@ WHERE industry IS NULL
 OR industry = ''
 ORDER BY industry;
 
--- let's take a look at these
 SELECT *
 FROM world_layoffs.layoffs_staging2
 WHERE company LIKE 'Bally%';
@@ -241,12 +222,6 @@ SELECT *
 FROM world_layoffs.layoffs_staging2
 WHERE company LIKE 'airbnb%';
 
--- it looks like airbnb is a travel, but this one just isn't populated.
--- I'm sure it's the same for the others. What we can do is
--- write a query that if there is another row with the same company name, it will update it to the non-null industry values
--- makes it easy so if there were thousands we wouldn't have to manually check them all
-
--- we should set the blanks to nulls since those are typically easier to work with
 UPDATE world_layoffs.layoffs_staging2
 SET industry = NULL
 WHERE industry = '';
@@ -259,7 +234,7 @@ WHERE industry IS NULL
 OR industry = ''
 ORDER BY industry;
 
--- now we need to populate those nulls if possible
+
 SET SQL_SAFE_UPDATES = 0;
 
 DELETE FROM world_layoffs.layoffs_staging2
@@ -273,7 +248,6 @@ SET t1.industry = t2.industry
 WHERE t1.industry IS NULL 
 AND t2.industry IS NOT NULL;
 
--- and if we check it looks like Bally's was the only one without a populated row to populate this null values
 SELECT *
 FROM world_layoffs.layoffs_staging2
 WHERE industry IS NULL 
